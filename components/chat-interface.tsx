@@ -7,7 +7,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Send } from 'lucide-react';
 
 interface Message {
-  role: "user" | "bot";
+  role: "user" | "genova";
   content: string;
 }
 
@@ -37,11 +37,11 @@ export default function ChatInterface() {
       }
 
       const data = await response.json();
-      const botMessage: Message = { role: "bot", content: data.response };
-      setMessages((prev) => [...prev, botMessage]);
+      const genovaMessage: Message = { role: "genova", content: data.response };
+      setMessages((prev) => [...prev, genovaMessage]);
     } catch (error) {
       console.error("Error:", error);
-      const errorMessage: Message = { role: "bot", content: "Sorry, I couldn't process that request." };
+      const errorMessage: Message = { role: "genova", content: "Sorry, I couldn't process that request." };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -55,12 +55,12 @@ export default function ChatInterface() {
       </CardHeader>
       <CardContent className="h-[440px] overflow-y-auto">
         {messages.map((message, index) => (
-          <div key={index} className={`mb-4 ${message.role === "bot" ? "text-blue-600" : "text-green-600"}`}>
-            <strong>{message.role === "bot" ? "Bot: " : "You: "}</strong>
+          <div key={index} className={`mb-4 ${message.role === "genova" ? "text-blue-600" : "text-green-600"}`}>
+            <strong>{message.role === "genova" ? "Genova: " : "You: "}</strong>
             {message.content}
           </div>
         ))}
-        {isLoading && <div className="text-gray-500">Bot is typing...</div>}
+        {isLoading && <div className="text-gray-500">Genova is typing...</div>}
       </CardContent>
       <CardFooter>
         <form onSubmit={handleSubmit} className="flex w-full gap-2">
