@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Send } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   role: "user" | "genova";
@@ -15,6 +16,13 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollTogenovatom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollTogenovatom, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,21 +57,34 @@ export default function ChatInterface() {
   };
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>Chat with Genova</CardTitle>
-      </CardHeader>
-      <CardContent className="h-[440px] overflow-y-auto">
+    <Card className="w-full max-w-2xl h-[630px] flex flex-col">
+      <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
         {messages.map((message, index) => (
-          <div key={index} className={`mb-4 ${message.role === "genova" ? "text-blue-600" : "text-green-600"}`}>
-            <strong>{message.role === "genova" ? "Genova: " : "You: "}</strong>
-            {message.content}
+          <div
+            key={index}
+            className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[80%] p-3 rounded-lg ${message.role === "user"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted"
+                }`}
+            >
+              <ReactMarkdown>{message.content}</ReactMarkdown>
+            </div>
           </div>
         ))}
-        {isLoading && <div className="text-gray-500">Genova is typing...</div>}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="max-w-[80%] p-3 rounded-lg bg-muted">
+              <span className="animate-pulse">Genova is thinking...</span>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
       </CardContent>
-      <CardFooter>
-        <form onSubmit={handleSubmit} className="flex w-full gap-2">
+      <CardFooter className="border-t">
+        <form onSubmit={handleSubmit} className="flex w-full mt-6 gap-3">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -72,10 +93,10 @@ export default function ChatInterface() {
           />
           <Button type="submit" disabled={isLoading}>
             <Send className="h-4 w-4" />
+            <span className="sr-only">Send message</span>
           </Button>
         </form>
       </CardFooter>
     </Card>
   );
 }
-
