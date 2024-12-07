@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Send } from 'lucide-react';
+import { Send, Paperclip } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
@@ -16,7 +16,9 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const scrollTogenovatom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -56,6 +58,12 @@ export default function ChatInterface() {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
   return (
     <Card className="w-full max-w-2xl h-[630px] flex flex-col">
       <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
@@ -84,11 +92,25 @@ export default function ChatInterface() {
         <div ref={messagesEndRef} />
       </CardContent>
       <CardFooter className="border-t">
-        <form onSubmit={handleSubmit} className="flex w-full mt-6 gap-3">
+        <form onSubmit={handleSubmit} className="flex w-full mt-4 gap-3">
+          <Input
+            type="file"
+            onChange={handleFileChange}
+            className="hidden"
+            ref={fileInputRef}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Paperclip className="h-4 w-4" />
+            <span className="sr-only">Attach file</span>
+          </Button>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
+            placeholder={file ? `File attached: ${file.name}` : "Type your message..."}
             className="flex-grow"
           />
           <Button type="submit" disabled={isLoading}>
