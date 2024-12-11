@@ -8,7 +8,7 @@ import { Send, Paperclip } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
-  role: "user" | "genova";
+  role: "user" | "assistant";
   content: string;
 }
 
@@ -20,17 +20,21 @@ export default function ChatInterface() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const scrollTogenovatom = () => {
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(scrollTogenovatom, [messages]);
+  useEffect(scrollToBottom, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if ((!input.trim() && !file) || isLoading) return;
 
-    const userMessage: Message = { role: "user", content: input };
+    const formData = new FormData();
+    if (input.trim()) formData.append('message', input);
+    if (file) formData.append('file', file);
+
+    const userMessage: Message = { role: "user", content: input || `Uploaded file: ${file?.name}` };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -38,23 +42,30 @@ export default function ChatInterface() {
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: formData,
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get response");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to get response");
       }
 
       const data = await response.json();
-      const genovaMessage: Message = { role: "genova", content: data.response };
-      setMessages((prev) => [...prev, genovaMessage]);
+      const assistantMessage: Message = { role: "assistant", content: data.response };
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error("Error:", error);
-      const errorMessage: Message = { role: "genova", content: "Sorry, I couldn't process that request." };
+      const errorMessage: Message = {
+        role: "assistant",
+        content: error instanceof Error ? error.message : "Sorry, I couldn't process that request."
+      };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
+      setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
