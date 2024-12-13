@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Genova
 
-## Getting Started
+![Genova Screenshot](public/genova.png)
 
-First, run the development server:
+**Genova** is an intelligent chatbot powered by [Google's Gemini AI](https://ai.google.dev/gemini-api/docs), enhanced with [Retrieval-Augmented Generation (RAG)](https://cloud.google.com/use-cases/retrieval-augmented-generation?hl=en) capabilities. It provides natural language interactions and can learn from uploaded documents to provide more informed responses.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🤖 AI-powered conversations using Google's Gemini API
+- 📚 Document upload and processing for enhanced knowledge
+- 🔍 Retrieval-Augmented Generation for context-aware responses
+- 💻 Built with Next.js for optimal performance and SEO
+- 🎨 Sleek UI design using Tailwind CSS and shadcn/ui components
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Used
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Front End:** Next.js, React, Tailwind CSS, shadcn/ui
+- **Back End:** Google Gemini API, LangChain
+- **Development Tools:** TypeScript, ESLint, PostCSS
 
-## Learn More
+## Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+Before you begin, ensure you have met the following requirements:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js (v22 or later)
+- npm (v10 or later)
+- A Google Cloud account with access to the Gemini API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Installation
 
-## Deploy on Vercel
+1. Clone the repository:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   git clone https://github.com/fhasnur/genova.git
+   cd genova
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Set up your environment variables:
+
+   Create a `.env` file in the root directory and add the following:
+
+   ```env
+   GEMINI_API_KEY=your-google-gemini-api-key
+   ```
+
+## Usage
+
+1. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+2. Open your browser and navigate to `http://localhost:3000`.
+
+3. Upload documents and interact with the AI chatbot.
+
+## Contributing
+
+Contributions are welcome. To contribute, fork this repository, create a new branch, and submit a pull request. 
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
